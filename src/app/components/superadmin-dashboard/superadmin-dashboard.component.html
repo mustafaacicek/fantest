@@ -1,0 +1,147 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="logo">
+      <h1>Fanla Superadmin</h1>
+    </div>
+    <div class="user-info">
+      <span *ngIf="currentUser">{{ currentUser.username }}</span>
+      <button class="logout-btn" (click)="logout()">Çıkış Yap</button>
+    </div>
+  </header>
+
+  <div class="dashboard-content">
+    <div class="sidebar">
+      <nav class="nav-menu">
+        <ul>
+          <li class="active"><a href="#"><i class="icon">📊</i> Ana Sayfa</a></li>
+          <li><a href="#"><i class="icon">👥</i> Kullanıcı Yönetimi</a></li>
+          <li><a href="#"><i class="icon">🔐</i> Yetkilendirme</a></li>
+          <li><a href="#"><i class="icon">📝</i> İçerik Yönetimi</a></li>
+          <li><a href="#"><i class="icon">📈</i> Raporlar</a></li>
+          <li><a href="#"><i class="icon">⚙️</i> Sistem Ayarları</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <main class="main-content">
+      <div class="welcome-card">
+        <h2>Hoş Geldiniz, {{ currentUser?.username }}!</h2>
+        <p>Superadmin paneline hoş geldiniz. Buradan tüm sistem yönetimi işlemlerini gerçekleştirebilirsiniz.</p>
+      </div>
+
+      <div class="stats-container">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-info">
+            <h3>Toplam Kullanıcı</h3>
+            <p class="stat-value">1,254</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">👮</div>
+          <div class="stat-info">
+            <h3>Admin Sayısı</h3>
+            <p class="stat-value">12</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📊</div>
+          <div class="stat-info">
+            <h3>Aktif Oturum</h3>
+            <p class="stat-value">48</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📈</div>
+          <div class="stat-info">
+            <h3>Sistem Yükü</h3>
+            <p class="stat-value">24%</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="admin-management">
+        <div class="section-header">
+          <h3>Admin Yönetimi</h3>
+          <button class="action-btn">+ Yeni Admin</button>
+        </div>
+        
+        <div class="admin-table">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Kullanıcı Adı</th>
+                <th>Rol</th>
+                <th>Son Giriş</th>
+                <th>Durum</th>
+                <th>İşlemler</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>ahmet_admin</td>
+                <td>ADMIN</td>
+                <td>13.05.2025 10:45</td>
+                <td><span class="status active">Aktif</span></td>
+                <td>
+                  <button class="table-btn edit">Düzenle</button>
+                  <button class="table-btn delete">Sil</button>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>mehmet_admin</td>
+                <td>ADMIN</td>
+                <td>12.05.2025 16:30</td>
+                <td><span class="status active">Aktif</span></td>
+                <td>
+                  <button class="table-btn edit">Düzenle</button>
+                  <button class="table-btn delete">Sil</button>
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>ayse_admin</td>
+                <td>ADMIN</td>
+                <td>10.05.2025 09:15</td>
+                <td><span class="status inactive">Pasif</span></td>
+                <td>
+                  <button class="table-btn edit">Düzenle</button>
+                  <button class="table-btn delete">Sil</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="system-logs">
+        <h3>Sistem Logları</h3>
+        <div class="log-list">
+          <div class="log-item">
+            <div class="log-time">13.05.2025 12:45</div>
+            <div class="log-level info">INFO</div>
+            <div class="log-message">Sistem bakımı tamamlandı</div>
+          </div>
+          <div class="log-item">
+            <div class="log-time">13.05.2025 11:32</div>
+            <div class="log-level warning">UYARI</div>
+            <div class="log-message">Yüksek CPU kullanımı tespit edildi</div>
+          </div>
+          <div class="log-item">
+            <div class="log-time">13.05.2025 10:15</div>
+            <div class="log-level error">HATA</div>
+            <div class="log-message">Veritabanı bağlantısı kesildi, otomatik yeniden bağlanıldı</div>
+          </div>
+          <div class="log-item">
+            <div class="log-time">13.05.2025 09:05</div>
+            <div class="log-level info">INFO</div>
+            <div class="log-message">Günlük yedekleme tamamlandı</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
