@@ -1,0 +1,140 @@
+<div class="lyrics-editor-container">
+  <div class="editor-header">
+    <button class="back-button" (click)="goBack()">
+      <i class="fas fa-arrow-left"></i> Geri Dön
+    </button>
+    <h2>Şarkı Sözü Editörü</h2>
+  </div>
+
+  <!-- Alert Messages -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+    <button class="close-btn" (click)="errorMessage = ''">×</button>
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+    <button class="close-btn" (click)="successMessage = ''">×</button>
+  </div>
+
+  <!-- Loading Indicator -->
+  <div *ngIf="isLoading" class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i> Yükleniyor...
+  </div>
+
+  <!-- Sound Selection -->
+  <div class="sound-selection" [formGroup]="lyricsForm">
+    <label for="soundSelect">Şarkı Seçin:</label>
+    <select 
+      id="soundSelect" 
+      formControlName="soundId" 
+      (change)="onSoundChange($event)"
+      [disabled]="isLoading"
+      class="form-control"
+    >
+      <option [ngValue]="null">Şarkı Seçin</option>
+      <option *ngFor="let sound of sounds" [ngValue]="sound.id">{{ sound.title }}</option>
+    </select>
+  </div>
+
+  <!-- Audio Player -->
+  <div *ngIf="currentSound" class="audio-player-container">
+    <div class="audio-player-header">
+      <h3>{{ currentSound.title }}</h3>
+      <div class="current-time">Geçen Süre: {{ formatTime(currentTime) }}</div>
+    </div>
+    
+    <audio 
+      #audioPlayer 
+      [src]="currentSound.soundUrl" 
+      (timeupdate)="onTimeUpdate()"
+      class="audio-player"
+      controls
+    ></audio>
+    
+    <div class="audio-controls">
+      <button class="control-btn play" (click)="playAudio()" [disabled]="isPlaying">
+        <i class="fas fa-play"></i> Oynat
+      </button>
+      <button class="control-btn pause" (click)="pauseAudio()" [disabled]="!isPlaying">
+        <i class="fas fa-pause"></i> Duraklat
+      </button>
+      <button class="control-btn stop" (click)="stopAudio()">
+        <i class="fas fa-stop"></i> Durdur
+      </button>
+      <button class="control-btn add-lyric" (click)="addLyricAtCurrentTime()">
+        <i class="fas fa-plus"></i> Bu Saniyeye Söz Ekle ({{ currentTime }}s)
+      </button>
+    </div>
+  </div>
+
+  <!-- Lyrics Form -->
+  <form [formGroup]="lyricsForm" (ngSubmit)="onSubmit()" *ngIf="currentSound" class="lyrics-form">
+    <div class="lyrics-header">
+      <h3>Şarkı Sözleri</h3>
+      <button type="button" class="add-btn" (click)="addLyricsItem()">
+        <i class="fas fa-plus"></i> Yeni Söz Ekle
+      </button>
+    </div>
+
+    <div class="lyrics-items" formArrayName="lyricsItems">
+      <div *ngIf="lyricsItems.length === 0" class="no-lyrics">
+        Henüz şarkı sözü eklenmemiş. Yukarıdaki "Yeni Söz Ekle" butonunu kullanarak veya şarkıyı çalarken "Bu Saniyeye Söz Ekle" butonuyla söz ekleyebilirsiniz.
+      </div>
+
+      <div 
+        *ngFor="let item of lyricsItems.controls; let i = index" 
+        [formGroupName]="i"
+        class="lyrics-item"
+        [class.current-lyric]="currentTime === item.get('second')?.value"
+      >
+        <div class="lyrics-item-header">
+          <div class="second-input">
+            <label>Saniye:</label>
+            <input 
+              type="number" 
+              formControlName="second" 
+              class="form-control" 
+              min="0"
+              [ngClass]="{'is-invalid': item.get('second')?.invalid && item.get('second')?.touched}"
+            >
+            <div *ngIf="item.get('second')?.invalid && item.get('second')?.touched" class="error-message">
+              <span *ngIf="item.get('second')?.errors?.['required']">Saniye gerekli.</span>
+              <span *ngIf="item.get('second')?.errors?.['min']">Saniye 0'dan küçük olamaz.</span>
+            </div>
+          </div>
+          <button type="button" class="remove-btn" (click)="removeLyricsItem(i)">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+        
+        <div class="lyric-input">
+          <label>Söz:</label>
+          <textarea 
+            formControlName="lyric" 
+            class="form-control" 
+            rows="2"
+            [ngClass]="{'is-invalid': item.get('lyric')?.invalid && item.get('lyric')?.touched}"
+            placeholder="Şarkı sözünü buraya girin..."
+          ></textarea>
+          <div *ngIf="item.get('lyric')?.invalid && item.get('lyric')?.touched" class="error-message">
+            <span *ngIf="item.get('lyric')?.errors?.['required']">Şarkı sözü gerekli.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-secondary" (click)="sortLyricsItems()">
+        <i class="fas fa-sort"></i> Sırala
+      </button>
+      <button type="submit" class="btn-primary" [disabled]="lyricsForm.invalid || isSubmitting">
+        <span *ngIf="isSubmitting">
+          <i class="fas fa-spinner fa-spin"></i> Kaydediliyor...
+        </span>
+        <span *ngIf="!isSubmitting">
+          <i class="fas fa-save"></i> Şarkı Sözlerini Kaydet
+        </span>
+      </button>
+    </div>
+  </form>
+</div>

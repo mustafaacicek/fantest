@@ -1,0 +1,149 @@
+<div class="team-management">
+  <!-- Alert Messages -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+    <button class="close-btn" (click)="errorMessage = ''">×</button>
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+    <button class="close-btn" (click)="successMessage = ''">×</button>
+  </div>
+
+  <!-- Team Form -->
+  <div class="team-form-container" id="teamForm">
+    <div class="section-header">
+      <h3>{{ editMode ? 'Edit Team' : 'Add New Team' }}</h3>
+      <button *ngIf="editMode" class="action-btn cancel" (click)="resetForm()">Cancel Editing</button>
+    </div>
+
+    <form [formGroup]="teamForm" (ngSubmit)="onSubmit()" class="team-form">
+      <div class="form-group">
+        <label for="name">Team Name</label>
+        <input 
+          type="text" 
+          id="name" 
+          formControlName="name" 
+          class="form-control" 
+          [ngClass]="{'is-invalid': teamForm.get('name')?.invalid && teamForm.get('name')?.touched}"
+        >
+        <div *ngIf="teamForm.get('name')?.invalid && teamForm.get('name')?.touched" class="error-message">
+          <span *ngIf="teamForm.get('name')?.errors?.['required']">Team name is required.</span>
+          <span *ngIf="teamForm.get('name')?.errors?.['minlength']">Team name must be at least 2 characters.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="logo">Logo URL</label>
+        <input 
+          type="text" 
+          id="logo" 
+          formControlName="logo" 
+          class="form-control" 
+          [ngClass]="{'is-invalid': teamForm.get('logo')?.invalid && teamForm.get('logo')?.touched}"
+          (input)="onLogoChange()"
+        >
+        <div *ngIf="teamForm.get('logo')?.invalid && teamForm.get('logo')?.touched" class="error-message">
+          <span *ngIf="teamForm.get('logo')?.errors?.['required']">Logo URL is required.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea 
+          id="description" 
+          formControlName="description" 
+          class="form-control" 
+          rows="3"
+          [ngClass]="{'is-invalid': teamForm.get('description')?.invalid && teamForm.get('description')?.touched}"
+        ></textarea>
+        <div *ngIf="teamForm.get('description')?.invalid && teamForm.get('description')?.touched" class="error-message">
+          <span *ngIf="teamForm.get('description')?.errors?.['required']">Description is required.</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="countryId">Country</label>
+        <select 
+          id="countryId" 
+          formControlName="countryId" 
+          class="form-control"
+          [ngClass]="{'is-invalid': teamForm.get('countryId')?.invalid && teamForm.get('countryId')?.touched}"
+        >
+          <option value="">Select a country</option>
+          <option *ngFor="let country of countries" [value]="country.id">{{ country.name }}</option>
+        </select>
+        <div *ngIf="teamForm.get('countryId')?.invalid && teamForm.get('countryId')?.touched" class="error-message">
+          <span *ngIf="teamForm.get('countryId')?.errors?.['required']">Country is required.</span>
+        </div>
+      </div>
+
+      <!-- Logo Preview -->
+      <div *ngIf="logoPreview" class="logo-preview">
+        <h4>Logo Preview</h4>
+        <img [src]="logoPreview" alt="Team Logo Preview" />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting">
+            <i class="fas fa-spinner fa-spin"></i> Saving...
+          </span>
+          <span *ngIf="!isSubmitting">
+            {{ editMode ? 'Update Team' : 'Add Team' }}
+          </span>
+        </button>
+        <button type="button" class="btn-secondary" (click)="resetForm()" *ngIf="!editMode">Clear Form</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Teams List -->
+  <div class="teams-list">
+    <div class="section-header">
+      <h3>Teams List</h3>
+      <button class="action-btn refresh" (click)="loadTeams()">
+        <i class="fas fa-sync"></i> Refresh
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i> Loading teams...
+    </div>
+
+    <div *ngIf="!isLoading && teams.length === 0" class="no-data">
+      No teams found. Add your first team using the form above.
+    </div>
+
+    <div *ngIf="!isLoading && teams.length > 0" class="team-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Logo</th>
+            <th>Name</th>
+            <th>Country</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let team of teams">
+            <td class="team-logo">
+              <img [src]="team.logo" alt="{{ team.name }} Logo" />
+            </td>
+            <td>{{ team.name }}</td>
+            <td>{{ team.countryName || getCountryName(team.countryId) }}</td>
+            <td class="description-cell">{{ team.description }}</td>
+            <td class="actions-cell">
+              <button class="table-btn edit" (click)="editTeam(team)">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="table-btn delete" (click)="deleteTeam(team.id!)">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

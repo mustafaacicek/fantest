@@ -13,19 +13,47 @@
     <div class="sidebar">
       <nav class="nav-menu">
         <ul>
-          <li class="active"><a href="#"><i class="icon">📊</i> Ana Sayfa</a></li>
-          <li><a href="#"><i class="icon">👥</i> Kullanıcılar</a></li>
-          <li><a href="#"><i class="icon">📝</i> İçerik Yönetimi</a></li>
-          <li><a href="#"><i class="icon">⚙️</i> Ayarlar</a></li>
+          <li [class.active]="activeSection === 'dashboard'">
+            <a (click)="setActiveSection('dashboard')">
+              <i class="icon">📊</i> Ana Sayfa
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'matches'">
+            <a (click)="setActiveSection('matches')">
+              <i class="icon">⚽</i> Maç Yönetimi
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'users'">
+            <a (click)="setActiveSection('users')">
+              <i class="icon">👥</i> Kullanıcılar
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'sounds'">
+            <a (click)="setActiveSection('sounds')">
+              <i class="icon">🔊</i> Ses Yönetimi
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'content'">
+            <a (click)="setActiveSection('content')">
+              <i class="icon">📝</i> İçerik Yönetimi
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'settings'">
+            <a (click)="setActiveSection('settings')">
+              <i class="icon">⚙️</i> Ayarlar
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
 
     <main class="main-content">
-      <div class="welcome-card">
-        <h2>Hoş Geldiniz, {{ currentUser?.username }}!</h2>
-        <p>Admin paneline hoş geldiniz. Buradan sistem yönetimi işlemlerini gerçekleştirebilirsiniz.</p>
-      </div>
+      <!-- Dashboard Section -->
+      <div *ngIf="activeSection === 'dashboard'">
+        <div class="welcome-card">
+          <h2>Hoş Geldiniz, {{ currentUser?.username }}!</h2>
+          <p>Admin paneline hoş geldiniz. Buradan sistem yönetimi işlemlerini gerçekleştirebilirsiniz.</p>
+        </div>
 
       <div class="stats-container">
         <div class="stat-card">
@@ -80,6 +108,29 @@
             </div>
           </div>
         </div>
+      </div>
+      </div>
+      
+      <!-- Match Management Section -->
+      <app-match *ngIf="activeSection === 'matches'"></app-match>
+      
+      <!-- Sound Management Section -->
+      <app-sound *ngIf="activeSection === 'sounds'"></app-sound>
+      
+      <!-- Other Sections Placeholders -->
+      <div *ngIf="activeSection === 'users'" class="section-placeholder">
+        <h2>Kullanıcı Yönetimi</h2>
+        <p>Bu bölüm geliştirme aşamasındadır.</p>
+      </div>
+      
+      <div *ngIf="activeSection === 'content'" class="section-placeholder">
+        <h2>İçerik Yönetimi</h2>
+        <p>Bu bölüm geliştirme aşamasındadır.</p>
+      </div>
+      
+      <div *ngIf="activeSection === 'settings'" class="section-placeholder">
+        <h2>Ayarlar</h2>
+        <p>Bu bölüm geliştirme aşamasındadır.</p>
       </div>
     </main>
   </div>

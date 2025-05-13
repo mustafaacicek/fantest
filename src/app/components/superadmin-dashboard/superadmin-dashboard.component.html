@@ -13,21 +13,57 @@
     <div class="sidebar">
       <nav class="nav-menu">
         <ul>
-          <li class="active"><a href="#"><i class="icon">📊</i> Ana Sayfa</a></li>
-          <li><a href="#"><i class="icon">👥</i> Kullanıcı Yönetimi</a></li>
-          <li><a href="#"><i class="icon">🔐</i> Yetkilendirme</a></li>
-          <li><a href="#"><i class="icon">📝</i> İçerik Yönetimi</a></li>
-          <li><a href="#"><i class="icon">📈</i> Raporlar</a></li>
-          <li><a href="#"><i class="icon">⚙️</i> Sistem Ayarları</a></li>
+          <li [class.active]="activeSection === 'dashboard'">
+            <a (click)="setActiveSection('dashboard')">
+              <i class="icon">📊</i> Ana Sayfa
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'users'">
+            <a (click)="setActiveSection('users')">
+              <i class="icon">👥</i> Kullanıcı Yönetimi
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'countries'">
+            <a (click)="setActiveSection('countries')">
+              <i class="icon">🌎</i> Ülke Yönetimi
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'teams'">
+            <a (click)="setActiveSection('teams')">
+              <i class="icon">⚽</i> Takım Yönetimi
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'permissions'">
+            <a (click)="setActiveSection('permissions')">
+              <i class="icon">🔐</i> Yetkilendirme
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'content'">
+            <a (click)="setActiveSection('content')">
+              <i class="icon">📝</i> İçerik Yönetimi
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'reports'">
+            <a (click)="setActiveSection('reports')">
+              <i class="icon">📈</i> Raporlar
+            </a>
+          </li>
+          <li [class.active]="activeSection === 'settings'">
+            <a (click)="setActiveSection('settings')">
+              <i class="icon">⚙️</i> Sistem Ayarları
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
 
     <main class="main-content">
-      <div class="welcome-card">
-        <h2>Hoş Geldiniz, {{ currentUser?.username }}!</h2>
-        <p>Superadmin paneline hoş geldiniz. Buradan tüm sistem yönetimi işlemlerini gerçekleştirebilirsiniz.</p>
-      </div>
+      <!-- Dashboard Section -->
+      <div *ngIf="activeSection === 'dashboard'">
+        <div class="welcome-card">
+          <h2>Hoş Geldiniz, {{ currentUser?.username }}!</h2>
+          <p>Superadmin paneline hoş geldiniz. Buradan tüm sistem yönetimi işlemlerini gerçekleştirebilirsiniz.</p>
+        </div>
 
       <div class="stats-container">
         <div class="stat-card">
@@ -141,6 +177,37 @@
             <div class="log-message">Günlük yedekleme tamamlandı</div>
           </div>
         </div>
+      </div>
+      </div>
+      
+      <!-- Country Management Section -->
+      <app-country *ngIf="activeSection === 'countries'"></app-country>
+      
+      <!-- Team Management Section -->
+      <app-team *ngIf="activeSection === 'teams'"></app-team>
+      
+      <!-- User Management Section -->
+      <app-admin-user *ngIf="activeSection === 'users'"></app-admin-user>
+      
+      <!-- Other Sections Placeholders -->
+      <div *ngIf="activeSection === 'permissions'" class="section-placeholder">
+        <h2>Yetkilendirme</h2>
+        <p>Bu bölüm geliştirme aşamasındadır.</p>
+      </div>
+      
+      <div *ngIf="activeSection === 'content'" class="section-placeholder">
+        <h2>İçerik Yönetimi</h2>
+        <p>Bu bölüm geliştirme aşamasındadır.</p>
+      </div>
+      
+      <div *ngIf="activeSection === 'reports'" class="section-placeholder">
+        <h2>Raporlar</h2>
+        <p>Bu bölüm geliştirme aşamasındadır.</p>
+      </div>
+      
+      <div *ngIf="activeSection === 'settings'" class="section-placeholder">
+        <h2>Sistem Ayarları</h2>
+        <p>Bu bölüm geliştirme aşamasındadır.</p>
       </div>
     </main>
   </div>

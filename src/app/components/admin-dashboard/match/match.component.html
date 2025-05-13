@@ -1,0 +1,202 @@
+<div class="match-management">
+  <!-- Alert Messages -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+    <button class="close-btn" (click)="errorMessage = ''">×</button>
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+    <button class="close-btn" (click)="successMessage = ''">×</button>
+  </div>
+
+  <!-- Match Form -->
+  <div class="match-form-container" id="matchForm">
+    <div class="section-header">
+      <h3>{{ editMode ? 'Edit Match' : 'Add New Match' }}</h3>
+      <button *ngIf="editMode" class="action-btn cancel" (click)="resetForm()">Cancel Editing</button>
+    </div>
+
+    <form [formGroup]="matchForm" (ngSubmit)="onSubmit()" class="match-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Match Name</label>
+          <input 
+            type="text" 
+            id="name" 
+            formControlName="name" 
+            class="form-control" 
+            [ngClass]="{'is-invalid': matchForm.get('name')?.invalid && matchForm.get('name')?.touched}"
+            placeholder="e.g. Fenerbahçe vs Galatasaray"
+          >
+          <div *ngIf="matchForm.get('name')?.invalid && matchForm.get('name')?.touched" class="error-message">
+            <span *ngIf="matchForm.get('name')?.errors?.['required']">Match name is required.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="opponentTeamId">Opponent Team ID</label>
+          <input 
+            type="number" 
+            id="opponentTeamId" 
+            formControlName="opponentTeamId" 
+            class="form-control" 
+            [ngClass]="{'is-invalid': matchForm.get('opponentTeamId')?.invalid && matchForm.get('opponentTeamId')?.touched}"
+            placeholder="Enter opponent team ID"
+          >
+          <div *ngIf="matchForm.get('opponentTeamId')?.invalid && matchForm.get('opponentTeamId')?.touched" class="error-message">
+            <span *ngIf="matchForm.get('opponentTeamId')?.errors?.['required']">Opponent team ID is required.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input 
+            type="text" 
+            id="location" 
+            formControlName="location" 
+            class="form-control" 
+            [ngClass]="{'is-invalid': matchForm.get('location')?.invalid && matchForm.get('location')?.touched}"
+            placeholder="e.g. Şükrü Saracoğlu Stadium"
+          >
+          <div *ngIf="matchForm.get('location')?.invalid && matchForm.get('location')?.touched" class="error-message">
+            <span *ngIf="matchForm.get('location')?.errors?.['required']">Location is required.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="matchDate">Match Date & Time</label>
+          <input 
+            type="datetime-local" 
+            id="matchDate" 
+            formControlName="matchDate" 
+            class="form-control" 
+            [ngClass]="{'is-invalid': matchForm.get('matchDate')?.invalid && matchForm.get('matchDate')?.touched}"
+          >
+          <div *ngIf="matchForm.get('matchDate')?.invalid && matchForm.get('matchDate')?.touched" class="error-message">
+            <span *ngIf="matchForm.get('matchDate')?.errors?.['required']">Match date and time are required.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="homeScore">Home Score</label>
+          <input 
+            type="number" 
+            id="homeScore" 
+            formControlName="homeScore" 
+            class="form-control"
+            min="0"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="awayScore">Away Score</label>
+          <input 
+            type="number" 
+            id="awayScore" 
+            formControlName="awayScore" 
+            class="form-control"
+            min="0"
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="status">Match Status</label>
+          <select 
+            id="status" 
+            formControlName="status" 
+            class="form-control"
+          >
+            <option *ngFor="let status of matchStatuses" [value]="status">{{ status }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="activeSoundId">Active Sound ID (Optional)</label>
+          <input 
+            type="number" 
+            id="activeSoundId" 
+            formControlName="activeSoundId" 
+            class="form-control"
+            placeholder="Leave empty if no active sound"
+          >
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting">
+            <i class="fas fa-spinner fa-spin"></i> Saving...
+          </span>
+          <span *ngIf="!isSubmitting">
+            {{ editMode ? 'Update Match' : 'Add Match' }}
+          </span>
+        </button>
+        <button type="button" class="btn-secondary" (click)="resetForm()" *ngIf="!editMode">Clear Form</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Matches List -->
+  <div class="matches-list">
+    <div class="section-header">
+      <h3>My Team's Matches</h3>
+      <button class="action-btn refresh" (click)="loadMatches()">
+        <i class="fas fa-sync"></i> Refresh
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i> Loading matches...
+    </div>
+
+    <div *ngIf="!isLoading && matches.length === 0" class="no-data">
+      No matches found. Add your first match using the form above.
+    </div>
+
+    <div *ngIf="!isLoading && matches.length > 0" class="match-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Match Name</th>
+            <th>Opponent</th>
+            <th>Location</th>
+            <th>Date & Time</th>
+            <th>Score</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let match of matches">
+            <td>{{ match.id }}</td>
+            <td>{{ match.name }}</td>
+            <td>{{ match.opponentTeamName }}</td>
+            <td>{{ match.location }}</td>
+            <td>{{ formatMatchDate(match.matchDate) }}</td>
+            <td>{{ match.homeScore || 0 }} - {{ match.awayScore || 0 }}</td>
+            <td>
+              <span class="match-status" [ngClass]="getStatusClass(match.status || 'PLANNED')">
+                {{ match.status || 'PLANNED' }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button class="table-btn edit" (click)="editMatch(match)">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="table-btn delete" (click)="deleteMatch(match.id!)">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

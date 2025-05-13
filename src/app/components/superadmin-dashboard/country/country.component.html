@@ -1,0 +1,132 @@
+<div class="country-management">
+  <div class="section-header">
+    <h2>Ülke Yönetimi</h2>
+    <button class="btn btn-primary" (click)="openAddForm()">
+      <i class="icon">➕</i> Yeni Ülke Ekle
+    </button>
+  </div>
+
+  <!-- Success and Error Messages -->
+  <div class="alert alert-success" *ngIf="successMessage">
+    {{ successMessage }}
+  </div>
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading Indicator -->
+  <div class="loading-spinner" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Yükleniyor...</p>
+  </div>
+
+  <!-- Country Form -->
+  <div class="country-form-container" *ngIf="showForm">
+    <div class="card">
+      <div class="card-header">
+        <h3>{{ isEditMode ? 'Ülke Düzenle' : 'Yeni Ülke Ekle' }}</h3>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="countryForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="name" class="form-label">Ülke Adı</label>
+            <input 
+              type="text" 
+              id="name" 
+              formControlName="name" 
+              class="form-control"
+              [ngClass]="{'is-invalid': nameControl?.invalid && nameControl?.touched}"
+            >
+            <div class="error-message" *ngIf="nameControl?.invalid && nameControl?.touched">
+              Ülke adı gereklidir.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="shortCode" class="form-label">Ülke Kodu</label>
+            <input 
+              type="text" 
+              id="shortCode" 
+              formControlName="shortCode" 
+              class="form-control"
+              [ngClass]="{'is-invalid': shortCodeControl?.invalid && shortCodeControl?.touched}"
+              placeholder="TR, US, DE, vb."
+              maxlength="2"
+            >
+            <div class="error-message" *ngIf="shortCodeControl?.invalid && shortCodeControl?.touched">
+              Ülke kodu gereklidir ve en fazla 2 karakter olmalıdır.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="logoUrl" class="form-label">Bayrak URL</label>
+            <input 
+              type="text" 
+              id="logoUrl" 
+              formControlName="logoUrl" 
+              class="form-control"
+              [ngClass]="{'is-invalid': logoUrlControl?.invalid && logoUrlControl?.touched}"
+              placeholder="https://example.com/flags/turkey.png"
+            >
+            <div class="error-message" *ngIf="logoUrlControl?.invalid && logoUrlControl?.touched">
+              Bayrak URL'si gereklidir.
+            </div>
+          </div>
+
+          <div class="form-preview" *ngIf="logoUrlControl?.value">
+            <label class="form-label">Önizleme:</label>
+            <img [src]="logoUrlControl?.value" alt="Bayrak Önizleme" class="flag-preview">
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" (click)="cancelForm()">İptal</button>
+            <button type="submit" class="btn btn-primary" [disabled]="countryForm.invalid || isLoading">
+              {{ isEditMode ? 'Güncelle' : 'Ekle' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Countries Table -->
+  <div class="countries-table-container" *ngIf="!isLoading">
+    <div class="card">
+      <div class="card-body">
+        <table class="countries-table" *ngIf="countries.length > 0">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Bayrak</th>
+              <th>Ülke Adı</th>
+              <th>Ülke Kodu</th>
+              <th>İşlemler</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let country of countries">
+              <td>{{ country.id }}</td>
+              <td class="flag-cell">
+                <img [src]="country.logoUrl" [alt]="country.name + ' bayrağı'" class="country-flag">
+              </td>
+              <td>{{ country.name }}</td>
+              <td>{{ country.shortCode }}</td>
+              <td class="actions-cell">
+                <button class="btn-icon edit" (click)="openEditForm(country)" title="Düzenle">
+                  <i class="icon">✏️</i>
+                </button>
+                <button class="btn-icon delete" (click)="deleteCountry(country.id!)" title="Sil">
+                  <i class="icon">🗑️</i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="no-data" *ngIf="countries.length === 0">
+          <p>Henüz ülke bulunmamaktadır. Yeni bir ülke ekleyin.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

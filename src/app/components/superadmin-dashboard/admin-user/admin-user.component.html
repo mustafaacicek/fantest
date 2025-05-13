@@ -1,0 +1,183 @@
+<div class="admin-user-management">
+  <!-- Alert Messages -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+    <button class="close-btn" (click)="errorMessage = ''">×</button>
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+    <button class="close-btn" (click)="successMessage = ''">×</button>
+  </div>
+
+  <!-- Admin User Form -->
+  <div class="admin-form-container" id="adminForm">
+    <div class="section-header">
+      <h3>{{ editMode ? 'Edit Admin User' : 'Add New Admin User' }}</h3>
+      <button *ngIf="editMode" class="action-btn cancel" (click)="resetForm()">Cancel Editing</button>
+    </div>
+
+    <form [formGroup]="adminForm" (ngSubmit)="onSubmit()" class="admin-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input 
+            type="text" 
+            id="username" 
+            formControlName="username" 
+            class="form-control" 
+            [ngClass]="{'is-invalid': adminForm.get('username')?.invalid && adminForm.get('username')?.touched}"
+          >
+          <div *ngIf="adminForm.get('username')?.invalid && adminForm.get('username')?.touched" class="error-message">
+            <span *ngIf="adminForm.get('username')?.errors?.['required']">Username is required.</span>
+            <span *ngIf="adminForm.get('username')?.errors?.['minlength']">Username must be at least 3 characters.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            class="form-control" 
+            [ngClass]="{'is-invalid': adminForm.get('email')?.invalid && adminForm.get('email')?.touched}"
+          >
+          <div *ngIf="adminForm.get('email')?.invalid && adminForm.get('email')?.touched" class="error-message">
+            <span *ngIf="adminForm.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="adminForm.get('email')?.errors?.['email']">Please enter a valid email address.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input 
+            type="text" 
+            id="firstName" 
+            formControlName="firstName" 
+            class="form-control" 
+            [ngClass]="{'is-invalid': adminForm.get('firstName')?.invalid && adminForm.get('firstName')?.touched}"
+          >
+          <div *ngIf="adminForm.get('firstName')?.invalid && adminForm.get('firstName')?.touched" class="error-message">
+            <span *ngIf="adminForm.get('firstName')?.errors?.['required']">First name is required.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input 
+            type="text" 
+            id="lastName" 
+            formControlName="lastName" 
+            class="form-control" 
+            [ngClass]="{'is-invalid': adminForm.get('lastName')?.invalid && adminForm.get('lastName')?.touched}"
+          >
+          <div *ngIf="adminForm.get('lastName')?.invalid && adminForm.get('lastName')?.touched" class="error-message">
+            <span *ngIf="adminForm.get('lastName')?.errors?.['required']">Last name is required.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="password">Password {{ editMode ? '(Leave blank to keep current)' : '' }}</label>
+          <div class="password-input-container">
+            <input 
+              [type]="showPassword ? 'text' : 'password'" 
+              id="password" 
+              formControlName="password" 
+              class="form-control" 
+              [ngClass]="{'is-invalid': adminForm.get('password')?.invalid && adminForm.get('password')?.touched}"
+            >
+            <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+              <i class="fas" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+          </div>
+          <div *ngIf="adminForm.get('password')?.invalid && adminForm.get('password')?.touched" class="error-message">
+            <span *ngIf="adminForm.get('password')?.errors?.['required']">Password is required.</span>
+            <span *ngIf="adminForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="teamId">Team</label>
+          <select 
+            id="teamId" 
+            formControlName="teamId" 
+            class="form-control"
+            [ngClass]="{'is-invalid': adminForm.get('teamId')?.invalid && adminForm.get('teamId')?.touched}"
+          >
+            <option value="">Select a team</option>
+            <option *ngFor="let team of teams" [value]="team.id">{{ team.name }}</option>
+          </select>
+          <div *ngIf="adminForm.get('teamId')?.invalid && adminForm.get('teamId')?.touched" class="error-message">
+            <span *ngIf="adminForm.get('teamId')?.errors?.['required']">Team is required.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting">
+            <i class="fas fa-spinner fa-spin"></i> Saving...
+          </span>
+          <span *ngIf="!isSubmitting">
+            {{ editMode ? 'Update Admin User' : 'Add Admin User' }}
+          </span>
+        </button>
+        <button type="button" class="btn-secondary" (click)="resetForm()" *ngIf="!editMode">Clear Form</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Admin Users List -->
+  <div class="admins-list">
+    <div class="section-header">
+      <h3>Admin Users List</h3>
+      <button class="action-btn refresh" (click)="loadAdmins()">
+        <i class="fas fa-sync"></i> Refresh
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i> Loading admin users...
+    </div>
+
+    <div *ngIf="!isLoading && admins.length === 0" class="no-data">
+      No admin users found. Add your first admin using the form above.
+    </div>
+
+    <div *ngIf="!isLoading && admins.length > 0" class="admin-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Team</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let admin of admins">
+            <td>{{ admin.id }}</td>
+            <td>{{ admin.username }}</td>
+            <td>{{ admin.firstName }} {{ admin.lastName }}</td>
+            <td>{{ admin.email }}</td>
+            <td>{{ admin.teamName || getTeamName(admin.teamId) }}</td>
+            <td class="actions-cell">
+              <button class="table-btn edit" (click)="editAdmin(admin)">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="table-btn delete" (click)="deleteAdmin(admin.id!)">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

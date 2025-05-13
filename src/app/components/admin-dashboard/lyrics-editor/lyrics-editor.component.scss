@@ -1,0 +1,374 @@
+.lyrics-editor-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.editor-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+  
+  h2 {
+    margin: 0;
+    color: #2c3e50;
+    flex-grow: 1;
+    text-align: center;
+  }
+  
+  .back-button {
+    background-color: #f8f9fa;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    color: #2c3e50;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s;
+    
+    &:hover {
+      background-color: #e9ecef;
+    }
+  }
+}
+
+.alert {
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  &.alert-success {
+    background-color: #e8f5e9;
+    color: #27ae60;
+    border-left: 4px solid #27ae60;
+  }
+  
+  &.alert-danger {
+    background-color: #ffebee;
+    color: #c0392b;
+    border-left: 4px solid #c0392b;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.7;
+    
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 30px;
+  color: #3498db;
+  font-size: 1.1rem;
+}
+
+.sound-selection {
+  margin-bottom: 20px;
+  
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dce1e9;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    
+    &:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+    }
+  }
+}
+
+.audio-player-container {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px;
+  
+  .audio-player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    
+    h3 {
+      margin: 0;
+      color: #2c3e50;
+    }
+    
+    .current-time {
+      font-weight: 500;
+      color: #3498db;
+      background-color: #e3f2fd;
+      padding: 5px 10px;
+      border-radius: 15px;
+    }
+  }
+  
+  .audio-player {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    
+    .control-btn {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      
+      &.play {
+        background-color: #e8f5e9;
+        color: #27ae60;
+        
+        &:hover {
+          background-color: #c8e6c9;
+        }
+        
+        &:disabled {
+          background-color: #f1f1f1;
+          color: #95a5a6;
+          cursor: not-allowed;
+        }
+      }
+      
+      &.pause {
+        background-color: #fff3e0;
+        color: #f39c12;
+        
+        &:hover {
+          background-color: #ffe0b2;
+        }
+        
+        &:disabled {
+          background-color: #f1f1f1;
+          color: #95a5a6;
+          cursor: not-allowed;
+        }
+      }
+      
+      &.stop {
+        background-color: #ffebee;
+        color: #c0392b;
+        
+        &:hover {
+          background-color: #ffcdd2;
+        }
+      }
+      
+      &.add-lyric {
+        background-color: #e3f2fd;
+        color: #3498db;
+        
+        &:hover {
+          background-color: #bbdefb;
+        }
+      }
+    }
+  }
+}
+
+.lyrics-form {
+  .lyrics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    
+    h3 {
+      margin: 0;
+      color: #2c3e50;
+    }
+    
+    .add-btn {
+      background-color: #e3f2fd;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 15px;
+      color: #3498db;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.3s;
+      
+      &:hover {
+        background-color: #bbdefb;
+      }
+    }
+  }
+  
+  .lyrics-items {
+    margin-bottom: 25px;
+    
+    .no-lyrics {
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 5px;
+      color: #7f8c8d;
+      font-style: italic;
+      text-align: center;
+    }
+    
+    .lyrics-item {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      transition: all 0.3s;
+      
+      &.current-lyric {
+        background-color: #e3f2fd;
+        border-left: 4px solid #3498db;
+      }
+      
+      .lyrics-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        
+        .second-input {
+          flex-basis: 150px;
+          
+          label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 0.9rem;
+          }
+          
+          input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #dce1e9;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            
+            &:focus {
+              outline: none;
+              border-color: #3498db;
+            }
+            
+            &.is-invalid {
+              border-color: #e74c3c;
+            }
+          }
+        }
+        
+        .remove-btn {
+          background-color: #ffebee;
+          border: none;
+          border-radius: 5px;
+          width: 36px;
+          height: 36px;
+          color: #c0392b;
+          cursor: pointer;
+          transition: background-color 0.3s;
+          
+          &:hover {
+            background-color: #ffcdd2;
+          }
+        }
+      }
+      
+      .lyric-input {
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 500;
+          color: #2c3e50;
+          font-size: 0.9rem;
+        }
+        
+        textarea {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #dce1e9;
+          border-radius: 5px;
+          resize: vertical;
+          
+          &:focus {
+            outline: none;
+            border-color: #3498db;
+          }
+          
+          &.is-invalid {
+            border-color: #e74c3c;
+          }
+        }
+      }
+    }
+  }
+  
+  .error-message {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 5px;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      
+      &.btn-primary {
+        background-color: #3498db;
+        color: white;
+        
+        &:hover {
+          background-color: #2980b9;
+        }
+        
+        &:disabled {
+          background-color: #bdc3c7;
+          cursor: not-allowed;
+        }
+      }
+      
+      &.btn-secondary {
+        background-color: #ecf0f1;
+        color: #2c3e50;
+        
+        &:hover {
+          background-color: #bdc3c7;
+        }
+      }
+    }
+  }
+}

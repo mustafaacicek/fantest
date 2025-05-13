@@ -1,0 +1,162 @@
+<div class="sound-management">
+  <!-- Alert Messages -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+    <button class="close-btn" (click)="errorMessage = ''">×</button>
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+    <button class="close-btn" (click)="successMessage = ''">×</button>
+  </div>
+
+  <!-- Sound Form -->
+  <div class="sound-form-container" id="soundForm">
+    <div class="section-header">
+      <h3>{{ editMode ? 'Edit Sound' : 'Add New Sound' }}</h3>
+      <button *ngIf="editMode" class="action-btn cancel" (click)="resetForm()">Cancel Editing</button>
+    </div>
+
+    <form [formGroup]="soundForm" (ngSubmit)="onSubmit()" class="sound-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="title">Sound Title</label>
+          <input 
+            type="text" 
+            id="title" 
+            formControlName="title" 
+            class="form-control" 
+            [ngClass]="{'is-invalid': soundForm.get('title')?.invalid && soundForm.get('title')?.touched}"
+            placeholder="e.g. Team Anthem"
+          >
+          <div *ngIf="soundForm.get('title')?.invalid && soundForm.get('title')?.touched" class="error-message">
+            <span *ngIf="soundForm.get('title')?.errors?.['required']">Sound title is required.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="soundUrl">Sound URL</label>
+          <input 
+            type="text" 
+            id="soundUrl" 
+            formControlName="soundUrl" 
+            class="form-control" 
+            [ngClass]="{'is-invalid': soundForm.get('soundUrl')?.invalid && soundForm.get('soundUrl')?.touched}"
+            placeholder="e.g. https://example.com/sounds/anthem.mp3"
+          >
+          <div *ngIf="soundForm.get('soundUrl')?.invalid && soundForm.get('soundUrl')?.touched" class="error-message">
+            <span *ngIf="soundForm.get('soundUrl')?.errors?.['required']">Sound URL is required.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="description">Description (Optional)</label>
+          <textarea 
+            id="description" 
+            formControlName="description" 
+            class="form-control" 
+            rows="3"
+            placeholder="Enter a description for this sound"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="imageUrl">Image URL (Optional)</label>
+          <input 
+            type="text" 
+            id="imageUrl" 
+            formControlName="imageUrl" 
+            class="form-control"
+            placeholder="e.g. https://example.com/images/anthem.jpg"
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select 
+            id="status" 
+            formControlName="status" 
+            class="form-control"
+          >
+            <option *ngFor="let status of soundStatuses" [value]="status">{{ status }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="isSubmitting">
+          <span *ngIf="isSubmitting">
+            <i class="fas fa-spinner fa-spin"></i> Saving...
+          </span>
+          <span *ngIf="!isSubmitting">
+            {{ editMode ? 'Update Sound' : 'Add Sound' }}
+          </span>
+        </button>
+        <button type="button" class="btn-secondary" (click)="resetForm()" *ngIf="!editMode">Clear Form</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Sounds List -->
+  <div class="sounds-list">
+    <div class="section-header">
+      <h3>My Team's Sounds</h3>
+      <button class="action-btn refresh" (click)="loadSounds()">
+        <i class="fas fa-sync"></i> Refresh
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i> Loading sounds...
+    </div>
+
+    <div *ngIf="!isLoading && sounds.length === 0" class="no-data">
+      No sounds found. Add your first sound using the form above.
+    </div>
+
+    <div *ngIf="!isLoading && sounds.length > 0" class="sound-table">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sound of sounds">
+            <td>{{ sound.id }}</td>
+            <td class="sound-image">
+              <img *ngIf="sound.imageUrl" [src]="sound.imageUrl" alt="{{ sound.title }} Image" />
+              <div *ngIf="!sound.imageUrl" class="no-image">No Image</div>
+            </td>
+            <td>{{ sound.title }}</td>
+            <td class="description-cell">{{ sound.description || 'No description' }}</td>
+            <td>
+              <span class="sound-status" [ngClass]="getStatusClass(sound.status || 'STOPPED')">
+                {{ sound.status || 'STOPPED' }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button class="table-btn edit" (click)="editSound(sound)">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="table-btn delete" (click)="deleteSound(sound.id!)">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+              <button class="table-btn lyrics" (click)="navigateToLyricsEditor(sound.id)">
+                <i class="fas fa-music"></i> Lyrics Editor
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

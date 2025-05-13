@@ -3,16 +3,19 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
 import { Router } from '@angular/router';
+import { MatchComponent } from './match/match.component';
+import { SoundComponent } from './sound/sound.component';
 
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatchComponent, SoundComponent],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.scss']
 })
 export class AdminDashboardComponent implements OnInit {
   currentUser: User | null = null;
+  activeSection: string = 'dashboard';
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -29,5 +32,9 @@ export class AdminDashboardComponent implements OnInit {
 
   logout(): void {
     this.authService.logout();
+  }
+  
+  setActiveSection(section: string): void {
+    this.activeSection = section;
   }
 }
