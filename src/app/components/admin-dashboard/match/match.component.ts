@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Match, MatchStatus } from '../../../models/match.model';
 import { MatchService } from '../../../services/match.service';
 
@@ -24,7 +25,8 @@ export class MatchComponent implements OnInit {
   
   constructor(
     private matchService: MatchService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router
   ) {
     this.matchForm = this.fb.group({
       name: ['', Validators.required],
@@ -179,5 +181,9 @@ export class MatchComponent implements OnInit {
         formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     }, 100);
+  }
+  
+  navigateToMatchDetail(matchId: number): void {
+    this.router.navigate(['/admin/match-detail', matchId]);
   }
 }

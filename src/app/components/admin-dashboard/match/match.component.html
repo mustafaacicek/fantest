@@ -187,6 +187,9 @@
               </span>
             </td>
             <td class="actions-cell">
+              <button class="table-btn detail" (click)="navigateToMatchDetail(match.id!)">
+                <i class="fas fa-info-circle"></i> Details
+              </button>
               <button class="table-btn edit" (click)="editMatch(match)">
                 <i class="fas fa-edit"></i> Edit
               </button>

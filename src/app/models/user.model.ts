@@ -5,6 +5,7 @@ export interface User {
   role: Role;
   userId: number;
   token: string;
+  accessToken: string; // Added for JWT token handling
   refreshToken: string;
   teamId?: number;
   teamName?: string;

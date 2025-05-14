@@ -18,6 +18,12 @@ export const routes: Routes = [
     data: { role: Role.ADMIN }
   },
   { 
+    path: 'admin/match-detail/:id', 
+    loadComponent: () => import('./components/admin-dashboard/match-detail/match-detail.component').then(m => m.MatchDetailComponent),
+    canActivate: [AuthGuard],
+    data: { role: Role.ADMIN }
+  },
+  { 
     path: 'admin/sounds', 
     loadComponent: () => import('./components/admin-dashboard/sound/sound.component').then(m => m.SoundComponent),
     canActivate: [AuthGuard],
