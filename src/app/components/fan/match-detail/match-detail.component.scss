@@ -866,6 +866,8 @@ body {
 }
 
 // Responsive styles
+@use '../../../styles/shared' as *;
+
 @media (max-width: 768px) {
   .match-info-card {
     padding: 20px;

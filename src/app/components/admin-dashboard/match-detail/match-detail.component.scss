@@ -1,4 +1,4 @@
-@import '../../../styles/shared';
+@use '../../../styles/shared' as *;
 
 // Main Container
 
@@ -129,7 +129,7 @@
   
   .match-title {
     padding: 20px;
-    background: linear-gradient(to right, $primary-color, darken($primary-color, 10%));
+    background: linear-gradient(to right, $primary-color, color.adjust($primary-color, $lightness: -10%));
     color: white;
     
     h1 {
@@ -279,7 +279,7 @@
       width: 100%;
       
       &:hover {
-        background-color: darken($primary-color, 10%);
+        background-color: color.adjust($primary-color, $lightness: -10%);
       }
     }
   }
@@ -476,7 +476,7 @@
           color: white;
           
           &:hover:not(:disabled) {
-            background-color: darken($success-color, 10%);
+            background-color: color.adjust($success-color, $lightness: -10%);
           }
         }
         
@@ -485,7 +485,7 @@
           color: white;
           
           &:hover:not(:disabled) {
-            background-color: darken($warning-color, 10%);
+            background-color: color.adjust($warning-color, $lightness: -10%);
           }
         }
         
@@ -494,7 +494,7 @@
           color: white;
           
           &:hover:not(:disabled) {
-            background-color: darken($danger-color, 10%);
+            background-color: color.adjust($danger-color, $lightness: -10%);
           }
         }
       }

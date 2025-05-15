@@ -1,4 +1,4 @@
-@import '../../../styles/shared';
+@use '../../../styles/shared' as *;
 
 .team-management {
   margin-bottom: 30px;
@@ -23,10 +23,7 @@
     margin-bottom: 15px;
     
     label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: $text-color;
+      @include form-label;
     }
     
     .form-control {

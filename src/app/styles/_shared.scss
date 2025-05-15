@@ -1,16 +1,33 @@
-// Shared Variables
-$primary-color: #3f51b5;
-$secondary-color: #f50057;
-$success-color: #4caf50;
-$warning-color: #ff9800;
-$danger-color: #f44336;
-$light-gray: #f5f5f5;
-$medium-gray: #e0e0e0;
-$dark-gray: #757575;
-$text-color: #333;
-$card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-$border-radius: 8px;
-$transition: all 0.3s ease;
+// Shared
+@use 'sass:color';
+
+// Variables
+$primary-color: #3498db !default;
+$secondary-color: #2c3e50 !default;
+$success-color: #27ae60 !default;
+$warning-color: #f39c12 !default;
+$danger-color: #c0392b !default;
+$text-color: #2c3e50 !default;
+$border-color: #dce1e9 !default;
+$background-color: #f8f9fa !default;
+$light-gray: #f5f5f5 !default;
+$medium-gray: #e0e0e0 !default;
+$dark-gray: #757575 !default;
+$border-radius: 5px !default;
+$card-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !default;
+$transition: all 0.3s ease !default;
+
+// Export variables
+:export {
+  primaryColor: $primary-color;
+  secondaryColor: $secondary-color;
+  successColor: $success-color;
+  warningColor: $warning-color;
+  dangerColor: $danger-color;
+  textColor: $text-color;
+  borderColor: $border-color;
+  backgroundColor: $background-color;
+}
 
 // Status Colors
 $status-planned: #2196f3;
@@ -78,7 +95,7 @@ $status-cancelled: #f44336;
   color: $text-color;
 
   &:hover {
-    background-color: darken($bg-color, 10%);
+    background-color: color.adjust($bg-color, $lightness: -10%);
   }
 }
 
