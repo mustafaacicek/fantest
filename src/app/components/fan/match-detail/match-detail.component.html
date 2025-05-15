@@ -1,0 +1,127 @@
+<div class="match-detail-container">
+  <!-- Loading Spinner -->
+  <div class="loading-container" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Maç bilgileri yükleniyor...</p>
+  </div>
+  
+  <!-- Error Message -->
+  <div class="error-container" *ngIf="error">
+    <div class="error-icon">
+      <i class="fas fa-exclamation-circle"></i>
+    </div>
+    <p>{{ errorMessage || 'Maç bilgileri yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.' }}</p>
+    <button class="retry-button" (click)="joinTribune()" *ngIf="!isJoining">
+      <i class="fas fa-sync"></i>
+      <span>Tekrar Dene</span>
+    </button>
+  </div>
+
+  <!-- Tribune Join Button -->
+  <div class="tribune-join-container" *ngIf="!isConnected && !isJoining && !loading && !error">
+    <button class="tribune-join-button" (click)="joinTribune()">
+      <i class="fas fa-users"></i>
+      <span>Tribüne Katıl</span>
+    </button>
+    <p class="tribune-info">Canlı maç deneyimi için tribüne katılın!</p>
+  </div>
+  
+  <!-- Joining Tribune Message -->
+  <div class="joining-container" *ngIf="isJoining">
+    <div class="spinner"></div>
+    <p>Tribüne katılınıyor...</p>
+  </div>
+  
+  <!-- Match Details -->
+  <div class="match-details-container" *ngIf="match && isConnected">
+    <!-- Back Button -->
+    <div class="back-button-container">
+      <button class="back-button" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i>
+        <span>Maçlara Dön</span>
+      </button>
+    </div>
+    
+    <!-- Match Header -->
+    <div class="match-header">
+      <div class="match-title">
+        <h1>{{ match.name }}</h1>
+        <div class="match-status" [ngClass]="getStatusClass(match.status)">
+          {{ getStatusText(match.status) }}
+        </div>
+      </div>
+      <div class="match-info">
+        <div class="match-location">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>{{ match.location }}</span>
+        </div>
+        <div class="match-date">
+          <i class="far fa-calendar-alt"></i>
+          <span>{{ formatDate(match.matchDate) }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Match Score -->
+    <div class="match-score-container">
+      <div class="team home-team">
+        <div class="team-name">{{ match.teamName }}</div>
+        <div class="team-score">{{ match.homeScore }}</div>
+      </div>
+      <div class="score-divider">-</div>
+      <div class="team away-team">
+        <div class="team-score">{{ match.awayScore }}</div>
+        <div class="team-name">{{ match.opponentTeamName }}</div>
+      </div>
+    </div>
+    
+    <!-- Audio Player Section -->
+    <div class="audio-section" *ngIf="isConnected">
+      <div class="audio-header">
+        <div class="audio-icon">
+          <i class="fas" [ngClass]="isPlaying ? 'fa-volume-up' : 'fa-volume-mute'"></i>
+        </div>
+        <div class="audio-title" *ngIf="match.activeSoundTitle">
+          {{ match.activeSoundTitle }}
+        </div>
+      </div>
+      
+      <!-- Progress Bar -->
+      <div class="audio-progress-container" *ngIf="audio && match.activeSoundTitle">
+        <div class="audio-progress-bar">
+          <div class="audio-progress" [style.width.%]="(currentMillisecond / (audio.duration * 1000)) * 100"></div>
+        </div>
+        <div class="audio-time">
+          {{ currentMillisecond / 1000 | number:'1.0-0' }}s
+        </div>
+      </div>
+    </div>
+    
+    <!-- No Active Sound -->
+    <div class="no-sound-section" *ngIf="isConnected && !match.activeSoundTitle">
+      <div class="no-sound-icon">
+        <i class="fas fa-volume-mute"></i>
+      </div>
+      <p>Şu anda çalan bir şarkı bulunmuyor.</p>
+    </div>
+
+    <!-- Not Connected Message -->
+    <div class="not-connected-section" *ngIf="!isConnected && !isJoining && match.activeSoundTitle">
+      <div class="not-connected-icon">
+        <i class="fas fa-music"></i>
+      </div>
+      <p>Bu maçta müzik çalıyor! Dinlemek için tribüne katılın.</p>
+    </div>
+    
+    <!-- Lyrics Section -->
+    <div class="lyrics-container" *ngIf="isConnected && match.activeSoundTitle && currentLyric">
+      <div class="lyrics-header">
+        <i class="fas fa-microphone"></i>
+        <span>Şarkı Sözleri</span>
+      </div>
+      <div class="lyrics-content">
+        <p class="current-lyric">{{ currentLyric }}</p>
+      </div>
+    </div>
+  </div>
+</div>

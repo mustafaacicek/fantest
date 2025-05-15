@@ -1,0 +1,491 @@
+// Modern ve etkileyici Match Detail tasarımı
+
+// Ana container
+.match-detail-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Roboto', Arial, sans-serif;
+  color: #333;
+  background: linear-gradient(135deg, #f5f7fa 0%, #e4e9f2 100%);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  min-height: 500px;
+  position: relative;
+  overflow: hidden;
+}
+
+// Yükleme animasyonu
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(0, 123, 255, 0.2);
+    border-top: 5px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 18px;
+    color: #007bff;
+    font-weight: 500;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Hata mesajı
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  text-align: center;
+  
+  .error-icon {
+    font-size: 50px;
+    color: #dc3545;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 18px;
+    color: #dc3545;
+    margin-bottom: 20px;
+  }
+  
+  .retry-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    
+    i {
+      margin-right: 8px;
+    }
+    
+    &:hover {
+      background-color: darken(#dc3545, 10%);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Tribüne Katıl butonu
+.tribune-join-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 20px;
+  text-align: center;
+  
+  .tribune-join-button {
+    background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 15px 40px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(46, 125, 50, 0.3);
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    
+    i {
+      margin-right: 10px;
+      font-size: 24px;
+    }
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 25px rgba(46, 125, 50, 0.4);
+    }
+    
+    &:active {
+      transform: translateY(-1px);
+    }
+  }
+  
+  .tribune-info {
+    font-size: 16px;
+    color: #555;
+    max-width: 400px;
+  }
+}
+
+// Tribüne katılma mesajı
+.joining-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(76, 175, 80, 0.2);
+    border-top: 5px solid #4CAF50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 18px;
+    color: #4CAF50;
+    font-weight: 500;
+  }
+}
+
+// Maç detayları
+.match-details-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Geri butonu
+.back-button-container {
+  margin-bottom: 20px;
+  
+  .back-button {
+    background-color: transparent;
+    color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+    
+    i {
+      margin-right: 5px;
+    }
+    
+    &:hover {
+      background-color: #007bff;
+      color: white;
+    }
+  }
+}
+
+// Maç başlığı
+.match-header {
+  margin-bottom: 30px;
+  
+  .match-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    
+    h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+      color: #222;
+    }
+    
+    .match-status {
+      padding: 5px 10px;
+      border-radius: 15px;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      
+      &.status-live {
+        background-color: #dc3545;
+        color: white;
+      }
+      
+      &.status-completed {
+        background-color: #28a745;
+        color: white;
+      }
+      
+      &.status-planned {
+        background-color: #ffc107;
+        color: #333;
+      }
+      
+      &.status-cancelled {
+        background-color: #6c757d;
+        color: white;
+      }
+    }
+  }
+  
+  .match-info {
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 14px;
+    
+    .match-location, .match-date {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+      
+      i {
+        margin-right: 5px;
+        color: #007bff;
+      }
+    }
+  }
+}
+
+// Maç skoru
+.match-score-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+  margin-bottom: 30px;
+  box-shadow: 0 5px 15px rgba(26, 35, 126, 0.4);
+  
+  .team {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    
+    .team-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    .team-score {
+      font-size: 36px;
+      font-weight: 700;
+    }
+  }
+  
+  .score-divider {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 20px;
+  }
+}
+
+// Ses oynatıcı bölümü
+.audio-section {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  
+  .audio-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    
+    .audio-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #007bff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin-right: 15px;
+      font-size: 18px;
+    }
+    
+    .audio-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+  
+  .audio-progress-container {
+    display: flex;
+    align-items: center;
+    
+    .audio-progress-bar {
+      flex: 1;
+      height: 6px;
+      background-color: #e0e0e0;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-right: 10px;
+      
+      .audio-progress {
+        height: 100%;
+        background: linear-gradient(90deg, #007bff 0%, #00c6ff 100%);
+        border-radius: 3px;
+        transition: width 0.1s linear;
+      }
+    }
+    
+    .audio-time {
+      font-size: 14px;
+      color: #666;
+      min-width: 40px;
+      text-align: right;
+    }
+  }
+}
+
+// Ses yok mesajı
+.no-sound-section {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+  
+  .no-sound-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 24px;
+    color: #6c757d;
+  }
+  
+  p {
+    font-size: 16px;
+    color: #6c757d;
+  }
+}
+
+// Bağlı değil mesajı
+.not-connected-section {
+  background-color: #fff3cd;
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  margin-bottom: 20px;
+  
+  .not-connected-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #ffc107;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 24px;
+    color: white;
+  }
+  
+  p {
+    font-size: 16px;
+    color: #856404;
+  }
+}
+
+// Şarkı sözleri bölümü
+.lyrics-container {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  
+  .lyrics-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    color: #007bff;
+    font-size: 18px;
+    font-weight: 600;
+    
+    i {
+      margin-right: 10px;
+    }
+  }
+  
+  .lyrics-content {
+    .current-lyric {
+      font-size: 24px;
+      text-align: center;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      color: #333;
+      font-weight: 500;
+      line-height: 1.5;
+      animation: pulsate 1s ease-in-out infinite alternate;
+    }
+  }
+}
+
+@keyframes pulsate {
+  from { opacity: 0.8; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+// Responsive tasarım
+@media (max-width: 768px) {
+  .match-detail-container {
+    padding: 15px;
+    border-radius: 0;
+  }
+  
+  .match-header .match-title h1 {
+    font-size: 20px;
+  }
+  
+  .match-score-container {
+    padding: 15px;
+    
+    .team .team-name {
+      font-size: 16px;
+    }
+    
+    .team .team-score {
+      font-size: 28px;
+    }
+    
+    .score-divider {
+      font-size: 28px;
+      margin: 0 10px;
+    }
+  }
+  
+  .lyrics-content .current-lyric {
+    font-size: 20px;
+    padding: 15px;
+  }
+}

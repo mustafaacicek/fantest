@@ -3,7 +3,7 @@ import { Role } from './models/role.enum';
 import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '', redirectTo: '/match-detail/1', pathMatch: 'full' },
   { path: 'login', loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent) },
   { 
     path: 'admin-dashboard', 
@@ -59,5 +59,10 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     data: { role: Role.SUPERADMIN }
   },
-  { path: '**', redirectTo: '/login' }
+  
+  // Direct Match Detail Route
+  { 
+    path: 'match-detail/:id', 
+    loadComponent: () => import('./components/fan/match-detail/match-detail.component').then(m => m.MatchDetailComponent) 
+  },
 ];
