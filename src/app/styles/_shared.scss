@@ -34,44 +34,90 @@ $status-cancelled: #f44336;
 @mixin card {
   background-color: white;
   border-radius: $border-radius;
+  padding: 25px;
+  margin-bottom: 30px;
   box-shadow: $card-shadow;
   overflow: hidden;
 }
 
-@mixin button {
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  font-weight: 500;
-  transition: $transition;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-}
-
-// Common Form Styles
 @mixin form-control {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid $medium-gray;
-  border-radius: 4px;
+  border: 1px solid $border-color;
+  border-radius: 5px;
   font-size: 1rem;
   transition: border-color 0.3s;
-  
+
   &:focus {
     outline: none;
     border-color: $primary-color;
     box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
   }
-  
+
   &.is-invalid {
     border-color: $danger-color;
+  }
+}
+
+@mixin button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:disabled {
+    background-color: #bdc3c7;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-variant($bg-color, $text-color: white) {
+  background-color: $bg-color;
+  color: $text-color;
+
+  &:hover {
+    background-color: darken($bg-color, 10%);
+  }
+}
+
+// Common Alert Styles
+@mixin alert($bg-color, $text-color) {
+  padding: 12px 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: $bg-color;
+  color: $text-color;
+  border-left: 4px solid $text-color;
+}
+
+// Common Form Styles
+@mixin form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: $text-color;
+  font-size: 0.9rem;
+}
+
+// Common Container Styles
+@mixin content-container {
+  background-color: $background-color;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+// Common Header Styles
+@mixin section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2, h3 {
+    margin: 0;
+    color: $text-color;
   }
 }
