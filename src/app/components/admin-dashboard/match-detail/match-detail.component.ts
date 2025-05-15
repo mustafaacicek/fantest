@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { MatchDetailService } from '../../../services/match-detail.service';
 import { MatchDetail, MatchDetailResponse, Sound, SoundControlRequest } from '../../../models/match-detail.model';
 import { isPlatformBrowser, CommonModule, DatePipe } from '@angular/common';
-import { Subscription } from 'rxjs';
-import { catchError, finalize } from 'rxjs/operators';
+import { Subscription, interval } from 'rxjs';
+import { catchError, finalize, takeWhile } from 'rxjs/operators';
 
 @Component({
   selector: 'app-match-detail',
@@ -362,5 +362,67 @@ export class MatchDetailComponent implements OnInit, OnDestroy {
   
   getDefaultImageUrl(): string {
     return 'https://via.placeholder.com/80x80?text=No+Image';
+  }
+
+  // Aktif ses dosyasının şu anki süresini döndürür (saniye cinsinden)
+  getCurrentTime(soundId: number): number {
+    if (!isPlatformBrowser(this.platformId) || !this.audioElements[soundId]) {
+      return 0;
+    }
+    return this.audioElements[soundId].currentTime;
+  }
+
+  // Aktif ses dosyasının toplam süresini döndürür (saniye cinsinden)
+  getTotalDuration(soundId: number): number {
+    if (!isPlatformBrowser(this.platformId) || !this.audioElements[soundId]) {
+      return 0;
+    }
+    return this.audioElements[soundId].duration || 0;
+  }
+
+  // Aktif ses dosyasının ilerleme yüzdesini döndürür
+  getProgressPercentage(soundId: number): number {
+    if (!isPlatformBrowser(this.platformId) || !this.audioElements[soundId]) {
+      return 0;
+    }
+    const audio = this.audioElements[soundId];
+    if (!audio.duration) return 0;
+    return (audio.currentTime / audio.duration) * 100;
+  }
+
+  // Aktif sesi oynat
+  playActiveSound(): void {
+    if (!isPlatformBrowser(this.platformId) || !this.matchDetail?.activeSoundId) {
+      return;
+    }
+    
+    const activeSound = this.sounds.find(s => s.id === this.matchDetail?.activeSoundId);
+    if (activeSound) {
+      this.playSound(activeSound);
+    }
+  }
+
+  // Aktif sesi duraklat
+  pauseActiveSound(): void {
+    if (!isPlatformBrowser(this.platformId) || !this.matchDetail?.activeSoundId) {
+      return;
+    }
+    
+    const activeSound = this.sounds.find(s => s.id === this.matchDetail?.activeSoundId);
+    if (activeSound) {
+      this.pauseSound(activeSound);
+    }
+  }
+
+  // Aktif sesi durdur
+  stopActiveSound(): void {
+    if (!isPlatformBrowser(this.platformId) || !this.matchDetail?.activeSoundId) {
+      return;
+    }
+    
+    const activeSound = this.sounds.find(s => s.id === this.matchDetail?.activeSoundId);
+    if (activeSound) {
+      this.stopSound(activeSound);
+    }
   }
 }

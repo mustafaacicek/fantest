@@ -1,136 +1,221 @@
-<div class="match-detail-container">
-  <!-- Loading Spinner -->
-  <div *ngIf="loading" class="loading-spinner">
-    <div class="spinner"></div>
-    <p>Loading...</p>
-  </div>
-
-  <!-- Error Message -->
-  <div *ngIf="error" class="alert alert-danger">
-    <i class="fas fa-exclamation-circle"></i> {{ error }}
-  </div>
-
-  <!-- Success Message -->
-  <div *ngIf="success" class="alert alert-success">
-    <i class="fas fa-check-circle"></i> {{ success }}
-  </div>
-
-  <!-- Match Details -->
-  <div *ngIf="matchDetail && !loading" class="match-details-section">
-    <div class="match-header">
-      <h2>{{ matchDetail.name }}</h2>
-      <div class="match-info">
-        <p><i class="fas fa-map-marker-alt"></i> {{ matchDetail.location }}</p>
-        <p><i class="fas fa-calendar-alt"></i> {{ matchDetail.matchDate | date:'medium' }}</p>
-        <span class="match-status" [ngClass]="{
-          'status-planned': matchDetail.status === 'PLANNED',
-          'status-live': matchDetail.status === 'LIVE',
-          'status-completed': matchDetail.status === 'COMPLETED',
-          'status-cancelled': matchDetail.status === 'CANCELLED'
-        }">
-          {{ matchDetail.status }}
-        </span>
-      </div>
+<div class="admin-match-detail-container">
+  <!-- Top Navigation Bar -->
+  <div class="admin-top-bar">
+    <button class="back-button" (click)="navigateToMatches()">
+      <i class="fas fa-arrow-left"></i> Back to Matches
+    </button>
+    <div class="status-indicator" *ngIf="loading">
+      <div class="spinner"></div>
+      <span>Processing...</span>
     </div>
+  </div>
 
-    <!-- Match Control Panel -->
-    <div class="match-control-panel">
-      <div class="control-section">
-        <h3>Match Score</h3>
-        <form [formGroup]="scoreForm" (ngSubmit)="updateScore()" class="score-form">
-          <div class="teams-score">
-            <div class="team">
-              <span class="team-name">{{ matchDetail.teamName }}</span>
-              <input type="number" formControlName="homeScore" min="0" class="score-input">
-            </div>
-            <span class="score-separator">:</span>
-            <div class="team">
-              <input type="number" formControlName="awayScore" min="0" class="score-input">
-              <span class="team-name">{{ matchDetail.opponentTeamName }}</span>
-            </div>
-          </div>
-          <button type="submit" class="btn btn-primary" [disabled]="scoreForm.invalid || loading">
-            Update Score
-          </button>
-        </form>
+  <!-- Notification Area -->
+  <div class="notification-area">
+    <div *ngIf="error" class="notification error">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span>{{ error }}</span>
+      <button class="close-btn" (click)="error = null"><i class="fas fa-times"></i></button>
+    </div>
+    <div *ngIf="success" class="notification success">
+      <i class="fas fa-check-circle"></i>
+      <span>{{ success }}</span>
+      <button class="close-btn" (click)="success = null"><i class="fas fa-times"></i></button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="matchDetail" class="admin-content">
+    <!-- Match Header Card -->
+    <div class="card match-header-card">
+      <div class="match-title">
+        <h1>{{ matchDetail.name }}</h1>
+        <div class="match-meta">
+          <span><i class="fas fa-map-marker-alt"></i> {{ matchDetail.location }}</span>
+          <span><i class="fas fa-calendar-alt"></i> {{ matchDetail.matchDate | date:'medium' }}</span>
+        </div>
       </div>
 
-      <div class="control-section">
-        <h3>Match Status</h3>
-        <div class="status-buttons">
-          <button *ngFor="let status of statusOptions" 
-                  class="btn" 
-                  [ngClass]="{
-                    'btn-outline-secondary': matchDetail.status !== status,
-                    'btn-primary': matchDetail.status === status
-                  }"
-                  [disabled]="matchDetail.status === status || loading"
-                  (click)="updateStatus(status)">
-            {{ status }}
-          </button>
+      <!-- Match Score Display -->
+      <div class="match-score-display">
+        <div class="team home-team">
+          <div class="team-logo">{{ matchDetail.teamName.charAt(0) }}</div>
+          <div class="team-name">{{ matchDetail.teamName }}</div>
+        </div>
+        <div class="score-container">
+          <div class="score">{{ matchDetail.homeScore }}</div>
+          <div class="score-divider">:</div>
+          <div class="score">{{ matchDetail.awayScore }}</div>
+        </div>
+        <div class="team away-team">
+          <div class="team-logo">{{ matchDetail.opponentTeamName.charAt(0) }}</div>
+          <div class="team-name">{{ matchDetail.opponentTeamName }}</div>
         </div>
       </div>
     </div>
 
-    <!-- Currently Playing Sound -->
-    <div *ngIf="matchDetail.activeSoundId" class="active-sound-section">
-      <h3>Currently Active Sound</h3>
-      <div class="active-sound-info">
-        <div class="sound-title">
-          <i class="fas fa-music"></i> {{ matchDetail.activeSoundTitle }}
+    <!-- Control Panel -->
+    <div class="admin-control-panel">
+      <!-- Match Controls -->
+      <div class="card control-card">
+        <div class="card-header">
+          <h2><i class="fas fa-sliders-h"></i> Match Controls</h2>
         </div>
-        <div class="sound-status">
-          <span *ngIf="getSoundStatus(matchDetail.activeSoundId) === 'PLAYING'" class="playing-status">
-            <i class="fas fa-play-circle"></i> Playing
-          </span>
-          <span *ngIf="getSoundStatus(matchDetail.activeSoundId) === 'PAUSED'" class="paused-status">
-            <i class="fas fa-pause-circle"></i> Paused
-          </span>
-          <span *ngIf="getSoundStatus(matchDetail.activeSoundId) === 'STOPPED'" class="stopped-status">
-            <i class="fas fa-stop-circle"></i> Stopped
-          </span>
+        <div class="card-body">
+          <!-- Score Update Form -->
+          <div class="control-section">
+            <h3>Update Score</h3>
+            <form [formGroup]="scoreForm" (ngSubmit)="updateScore()" class="score-form">
+              <div class="score-inputs">
+                <div class="input-group">
+                  <label>{{ matchDetail.teamName }}</label>
+                  <input type="number" formControlName="homeScore" min="0" class="score-input">
+                </div>
+                <div class="input-group">
+                  <label>{{ matchDetail.opponentTeamName }}</label>
+                  <input type="number" formControlName="awayScore" min="0" class="score-input">
+                </div>
+              </div>
+              <button type="submit" class="btn primary-btn" [disabled]="scoreForm.invalid">
+                <i class="fas fa-save"></i> Update Score
+              </button>
+            </form>
+          </div>
+
+          <!-- Match Status Controls -->
+          <div class="control-section">
+            <h3>Match Status</h3>
+            <div class="status-display">
+              <span class="current-status" [ngClass]="'status-' + matchDetail.status.toLowerCase()">
+                <i class="fas fa-circle"></i> {{ matchDetail.status }}
+              </span>
+            </div>
+            <div class="status-buttons">
+              <button *ngFor="let status of statusOptions" 
+                      class="btn status-btn" 
+                      [ngClass]="{
+                        'active': matchDetail.status === status,
+                        'status-planned-btn': status === 'PLANNED',
+                        'status-live-btn': status === 'LIVE',
+                        'status-completed-btn': status === 'COMPLETED',
+                        'status-cancelled-btn': status === 'CANCELLED'
+                      }"
+                      [disabled]="matchDetail.status === status"
+                      (click)="updateStatus(status)">
+                {{ status }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sound Player -->
+      <div class="card sound-player-card">
+        <div class="card-header">
+          <h2><i class="fas fa-music"></i> Sound Player</h2>
+        </div>
+        <div class="card-body">
+          <!-- Active Sound Display -->
+          <div class="active-sound-display" *ngIf="matchDetail.activeSoundId">
+            <div class="now-playing">
+              <div class="sound-icon">
+                <i class="fas" [ngClass]="{
+                  'fa-play-circle': getSoundStatus(matchDetail.activeSoundId) === 'PLAYING',
+                  'fa-pause-circle': getSoundStatus(matchDetail.activeSoundId) === 'PAUSED',
+                  'fa-stop-circle': getSoundStatus(matchDetail.activeSoundId) === 'STOPPED'
+                }"></i>
+              </div>
+              <div class="sound-info">
+                <div class="sound-title">{{ matchDetail.activeSoundTitle }}</div>
+                <div class="sound-status" [ngClass]="{
+                  'status-playing': getSoundStatus(matchDetail.activeSoundId) === 'PLAYING',
+                  'status-paused': getSoundStatus(matchDetail.activeSoundId) === 'PAUSED',
+                  'status-stopped': getSoundStatus(matchDetail.activeSoundId) === 'STOPPED'
+                }">
+                  {{ getSoundStatus(matchDetail.activeSoundId) }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Current Time Display -->
+            <div class="time-display" *ngIf="audioElements[matchDetail.activeSoundId]">
+              <div class="current-time">{{ getCurrentTime(matchDetail.activeSoundId) | number:'1.0-0' }}s</div>
+              <div class="progress-bar">
+                <div class="progress" [style.width.%]="getProgressPercentage(matchDetail.activeSoundId)"></div>
+              </div>
+              <div class="total-time">{{ getTotalDuration(matchDetail.activeSoundId) | number:'1.0-0' }}s</div>
+            </div>
+
+            <!-- Active Sound Controls -->
+            <div class="active-sound-controls">
+              <button class="btn control-btn play-btn" 
+                      (click)="playActiveSound()">
+                <i class="fas fa-play"></i>
+              </button>
+              <button class="btn control-btn pause-btn" 
+                      (click)="pauseActiveSound()">
+                <i class="fas fa-pause"></i>
+              </button>
+              <button class="btn control-btn stop-btn" 
+                      (click)="stopActiveSound()">
+                <i class="fas fa-stop"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- No Active Sound -->
+          <div class="no-active-sound" *ngIf="!matchDetail.activeSoundId">
+            <i class="fas fa-volume-mute"></i>
+            <p>No sound is currently active</p>
+            <p class="hint">Select a sound from the list below to play</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Team Sounds List -->
-    <div class="sounds-section">
-      <h3>Team Sounds</h3>
-      <div class="sounds-list">
-        <div *ngFor="let sound of sounds" class="sound-item" [ngClass]="{'active-sound': isSoundActive(sound.id)}">
-          <div class="sound-info">
-            <div class="sound-image">
-              <img [src]="sound.imageUrl || getDefaultImageUrl()" alt="{{ sound.title }}">
+    <!-- Sounds Library -->
+    <div class="card sounds-library-card">
+      <div class="card-header">
+        <h2><i class="fas fa-list"></i> Sounds Library</h2>
+      </div>
+      <div class="card-body">
+        <div class="sounds-grid">
+          <div *ngFor="let sound of sounds" class="sound-card" [ngClass]="{'active': isSoundActive(sound.id)}">
+            <div class="sound-card-header">
+              <div class="sound-image">
+                <img [src]="sound.imageUrl || getDefaultImageUrl()" alt="{{ sound.title }}">
+              </div>
+              <div class="sound-details">
+                <h3>{{ sound.title }}</h3>
+                <p>{{ sound.description }}</p>
+              </div>
             </div>
-            <div class="sound-details">
-              <h4>{{ sound.title }}</h4>
-              <p>{{ sound.description }}</p>
+            <div class="sound-card-footer">
+              <div class="sound-duration" *ngIf="audioElements[sound.id]">
+                {{ getTotalDuration(sound.id) | number:'1.0-0' }}s
+              </div>
+              <div class="sound-controls">
+                <button class="btn control-btn play-btn" 
+                        (click)="playSound(sound)">
+                  <i class="fas fa-play"></i>
+                </button>
+                <button class="btn control-btn pause-btn" 
+                        (click)="pauseSound(sound)">
+                  <i class="fas fa-pause"></i>
+                </button>
+                <button class="btn control-btn stop-btn" 
+                        (click)="stopSound(sound)">
+                  <i class="fas fa-stop"></i>
+                </button>
+              </div>
             </div>
           </div>
-          <div class="sound-controls">
-            <button class="btn-play" 
-                    [disabled]="loading || (isSoundActive(sound.id) && getSoundStatus(sound.id) === 'PLAYING')"
-                    (click)="playSound(sound)"
-                    title="Play sound">
-              <i class="fas fa-play"></i>
-            </button>
-            <button class="btn-pause" 
-                    [disabled]="loading || !isSoundActive(sound.id) || getSoundStatus(sound.id) !== 'PLAYING'"
-                    (click)="pauseSound(sound)"
-                    title="Pause sound">
-              <i class="fas fa-pause"></i>
-            </button>
-            <button class="btn-stop" 
-                    [disabled]="loading || !isSoundActive(sound.id) || getSoundStatus(sound.id) === 'STOPPED'"
-                    (click)="stopSound(sound)"
-                    title="Stop sound">
-              <i class="fas fa-stop"></i>
-            </button>
-          </div>
-        </div>
 
-        <div *ngIf="sounds.length === 0" class="no-sounds">
-          <p>No sounds available for this team.</p>
+          <!-- No Sounds Available -->
+          <div *ngIf="sounds.length === 0" class="no-sounds-message">
+            <i class="fas fa-music"></i>
+            <p>No sounds available for this team</p>
+          </div>
         </div>
       </div>
     </div>
@@ -138,7 +223,9 @@
 
   <!-- No Match Found -->
   <div *ngIf="!matchDetail && !loading && !error" class="no-match-found">
-    <p>Match not found or you don't have permission to view this match.</p>
-    <button class="btn btn-primary" (click)="navigateToMatches()">Back to Matches</button>
+    <i class="fas fa-search"></i>
+    <h2>Match Not Found</h2>
+    <p>The match you're looking for doesn't exist or you don't have permission to view it.</p>
+    <button class="btn primary-btn" (click)="navigateToMatches()">Back to Matches</button>
   </div>
 </div>
