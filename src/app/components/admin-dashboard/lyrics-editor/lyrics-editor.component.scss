@@ -1,4 +1,5 @@
 @use '../../../styles/shared' as *;
+@use 'sass:color';
 
 .lyrics-editor-container {
   @include card;
@@ -25,11 +26,11 @@
   align-items: center;
   
   &.alert-success {
-    @include alert(lighten($success-color, 50%), $success-color);
+    @include alert(color.adjust($success-color, $lightness: 50%), $success-color);
   }
   
   &.alert-danger {
-    @include alert(lighten($danger-color, 45%), $danger-color);
+    @include alert(color.adjust($danger-color, $lightness: 45%), $danger-color);
   }
   
   .close-btn {
@@ -103,11 +104,11 @@
       padding: 8px 15px;
       
       &.play {
-        @include button-variant(lighten($success-color, 45%), $success-color);
+        @include button-variant(color.adjust($success-color, $lightness: 45%), $success-color);
       }
       
       &.pause {
-        @include button-variant(lighten($warning-color, 45%), $warning-color);
+        @include button-variant(color.adjust($warning-color, $lightness: 45%), $warning-color);
       }
       
       &.stop {

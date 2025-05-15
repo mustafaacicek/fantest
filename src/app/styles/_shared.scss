@@ -19,14 +19,14 @@ $transition: all 0.3s ease !default;
 
 // Export variables
 :export {
-  primaryColor: $primary-color;
-  secondaryColor: $secondary-color;
-  successColor: $success-color;
-  warningColor: $warning-color;
-  dangerColor: $danger-color;
-  textColor: $text-color;
-  borderColor: $border-color;
-  backgroundColor: $background-color;
+  primary-color: $primary-color;
+  secondary-color: $secondary-color;
+  success-color: $success-color;
+  warning-color: $warning-color;
+  danger-color: $danger-color;
+  text-color: $text-color;
+  border-color: $border-color;
+  background-color: $background-color;
 }
 
 // Status Colors

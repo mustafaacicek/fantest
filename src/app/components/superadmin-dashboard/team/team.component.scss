@@ -1,4 +1,5 @@
 @use '../../../styles/shared' as *;
+@use 'sass:color';
 
 .team-management {
   margin-bottom: 30px;
@@ -75,11 +76,11 @@
         color: white;
         
         &:hover {
-          background-color: darken($primary-color, 10%);
+          background-color: color.adjust($primary-color, $lightness: -10%);
         }
         
         &:disabled {
-          background-color: lighten($primary-color, 20%);
+          background-color: color.adjust($primary-color, $lightness: 20%);
         }
       }
       
