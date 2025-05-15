@@ -1,0 +1,77 @@
+// Shared Variables
+$primary-color: #3f51b5;
+$secondary-color: #f50057;
+$success-color: #4caf50;
+$warning-color: #ff9800;
+$danger-color: #f44336;
+$light-gray: #f5f5f5;
+$medium-gray: #e0e0e0;
+$dark-gray: #757575;
+$text-color: #333;
+$card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$border-radius: 8px;
+$transition: all 0.3s ease;
+
+// Status Colors
+$status-planned: #2196f3;
+$status-live: #4caf50;
+$status-completed: #9c27b0;
+$status-cancelled: #f44336;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin card {
+  background-color: white;
+  border-radius: $border-radius;
+  box-shadow: $card-shadow;
+  overflow: hidden;
+}
+
+@mixin button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: $transition;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Common Form Styles
+@mixin form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid $medium-gray;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
+  }
+  
+  &.is-invalid {
+    border-color: $danger-color;
+  }
+}

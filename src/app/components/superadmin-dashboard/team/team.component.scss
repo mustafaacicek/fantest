@@ -1,13 +1,13 @@
+@import '../../../styles/shared';
+
 .team-management {
   margin-bottom: 30px;
 }
 
 .team-form-container {
-  background-color: white;
-  border-radius: 10px;
+  @include card;
   padding: 25px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .team-form {
@@ -26,26 +26,11 @@
       display: block;
       margin-bottom: 8px;
       font-weight: 500;
-      color: #2c3e50;
+      color: $text-color;
     }
     
     .form-control {
-      width: 100%;
-      padding: 10px 12px;
-      border: 1px solid #dce1e9;
-      border-radius: 5px;
-      font-size: 1rem;
-      transition: border-color 0.3s;
-      
-      &:focus {
-        outline: none;
-        border-color: #3949ab;
-        box-shadow: 0 0 0 2px rgba(57, 73, 171, 0.1);
-      }
-      
-      &.is-invalid {
-        border-color: #e53935;
-      }
+      @include form-control;
     }
     
     textarea.form-control {
@@ -53,7 +38,7 @@
     }
     
     .error-message {
-      color: #e53935;
+      color: $danger-color;
       font-size: 0.85rem;
       margin-top: 5px;
     }
@@ -61,22 +46,21 @@
   
   .logo-preview {
     grid-column: 1 / -1;
-    margin-top: 10px;
-    margin-bottom: 20px;
+    margin: 10px 0 20px;
     text-align: center;
     
     h4 {
       margin-bottom: 10px;
-      color: #2c3e50;
+      color: $text-color;
     }
     
     img {
       max-width: 200px;
       max-height: 200px;
-      border: 1px solid #dce1e9;
+      border: 1px solid $medium-gray;
       border-radius: 5px;
       padding: 5px;
-      background-color: #f8f9fa;
+      background-color: $light-gray;
     }
   }
   
@@ -87,33 +71,27 @@
     margin-top: 20px;
     
     button {
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.3s;
+      @include button;
       
       &.btn-primary {
-        background-color: #3949ab;
+        background-color: $primary-color;
         color: white;
         
         &:hover {
-          background-color: #303f9f;
+          background-color: darken($primary-color, 10%);
         }
         
         &:disabled {
-          background-color: #9fa8da;
-          cursor: not-allowed;
+          background-color: lighten($primary-color, 20%);
         }
       }
       
       &.btn-secondary {
-        background-color: #eceff1;
-        color: #455a64;
+        background-color: $light-gray;
+        color: $dark-gray;
         
         &:hover {
-          background-color: #cfd8dc;
+          background-color: $medium-gray;
         }
       }
     }
@@ -121,46 +99,37 @@
 }
 
 .teams-list {
-  background-color: white;
-  border-radius: 10px;
+  @include card;
   padding: 25px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  @include flex-between;
   margin-bottom: 20px;
   
   h3 {
     margin: 0;
-    color: #1a237e;
+    color: darken($primary-color, 10%);
   }
   
   .action-btn {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 5px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    @include button;
     
     &.refresh {
-      background-color: #e3f2fd;
-      color: #1565c0;
+      background-color: rgba($primary-color, 0.1);
+      color: $primary-color;
       
       &:hover {
-        background-color: #bbdefb;
+        background-color: rgba($primary-color, 0.2);
       }
     }
     
     &.cancel {
-      background-color: #ffebee;
-      color: #c62828;
+      background-color: rgba($danger-color, 0.1);
+      color: $danger-color;
       
       &:hover {
-        background-color: #ffcdd2;
+        background-color: rgba($danger-color, 0.2);
       }
     }
   }
@@ -169,14 +138,14 @@
 .loading-spinner {
   text-align: center;
   padding: 30px;
-  color: #3949ab;
+  color: $primary-color;
   font-size: 1.1rem;
 }
 
 .no-data {
   text-align: center;
   padding: 30px;
-  color: #7f8c8d;
+  color: $dark-gray;
   font-style: italic;
 }
 
@@ -191,17 +160,17 @@
     th, td {
       padding: 12px 15px;
       text-align: left;
-      border-bottom: 1px solid #ecf0f1;
+      border-bottom: 1px solid $light-gray;
     }
     
     th {
       font-weight: 600;
-      color: #2c3e50;
-      background-color: #f8f9fa;
+      color: $text-color;
+      background-color: $light-gray;
     }
     
     tbody tr:hover {
-      background-color: #f8f9fa;
+      background-color: $light-gray;
     }
     
     .team-logo {
@@ -212,8 +181,8 @@
         height: 60px;
         object-fit: contain;
         border-radius: 5px;
-        border: 1px solid #ecf0f1;
-        background-color: #f8f9fa;
+        border: 1px solid $light-gray;
+        background-color: $light-gray;
       }
     }
     
@@ -230,28 +199,25 @@
     }
     
     .table-btn {
+      @include button;
       padding: 5px 10px;
-      border: none;
-      border-radius: 4px;
-      margin-right: 5px;
-      cursor: pointer;
       font-size: 0.85rem;
       
       &.edit {
-        background-color: #e3f2fd;
-        color: #1565c0;
+        background-color: rgba($primary-color, 0.1);
+        color: $primary-color;
         
         &:hover {
-          background-color: #bbdefb;
+          background-color: rgba($primary-color, 0.2);
         }
       }
       
       &.delete {
-        background-color: #ffebee;
-        color: #c62828;
+        background-color: rgba($danger-color, 0.1);
+        color: $danger-color;
         
         &:hover {
-          background-color: #ffcdd2;
+          background-color: rgba($danger-color, 0.2);
         }
       }
     }
@@ -259,23 +225,21 @@
 }
 
 .alert {
+  @include flex-between;
   padding: 12px 15px;
   margin-bottom: 20px;
   border-radius: 5px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   
   &.alert-success {
-    background-color: #e8f5e9;
-    color: #2e7d32;
-    border-left: 4px solid #2e7d32;
+    background-color: rgba($success-color, 0.1);
+    color: $success-color;
+    border-left: 4px solid $success-color;
   }
   
   &.alert-danger {
-    background-color: #ffebee;
-    color: #c62828;
-    border-left: 4px solid #c62828;
+    background-color: rgba($danger-color, 0.1);
+    color: $danger-color;
+    border-left: 4px solid $danger-color;
   }
   
   .close-btn {
