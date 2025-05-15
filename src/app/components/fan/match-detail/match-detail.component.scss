@@ -865,9 +865,6 @@ body {
   100% { transform: scale(1); }
 }
 
-@use '../../../styles/shared' as *;
-@use 'sass:color';
-
 // Responsive styles
 @media (max-width: 768px) {
   .match-info-card {
